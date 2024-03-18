@@ -5,6 +5,8 @@ import mido
 import numpy as np
 import numpy.typing as npt
 
+from .note_gen import NoteGenerator, SineOscNoteGenerator
+
 DEFAULT_TEMPO = 500000
 RELEASE_SAMPLES = 44
 RELEASE_SECONDS = 0.001
@@ -51,8 +53,11 @@ def midi_to_note_events(midi: mido.MidiFile) -> Iterable[NoteEvent]:
 
 
 def midi2audio(
-    midi_file: IO[bytes], sample_rate: int = 44_100
+    midi_file: IO[bytes], note_gen: NoteGenerator | None = None
 ) -> npt.NDArray[np.float64]:
+    note_gen = SineOscNoteGenerator(44_100) if note_gen is None else note_gen
+    sample_rate = note_gen.sample_rate
+
     release_samples = int(math.ceil(sample_rate * RELEASE_SECONDS))
     midi = mido.MidiFile(file=midi_file)
 
@@ -65,11 +70,10 @@ def midi2audio(
         freq = 440.0 * (2.0 ** ((msg.note - 69) / 12.0))
 
         # Generate the audio for the note
-        t = np.arange(int(msg.duration * sample_rate)) / sample_rate
-        note = np.sin(2 * np.pi * freq * t)
+        note = note_gen.gen_note(freq, msg.duration)
         env = np.concatenate(
             (
-                np.ones(len(t) - release_samples),
+                np.ones(len(note) - release_samples),
                 np.linspace(1, 0, release_samples),
             )
         )
