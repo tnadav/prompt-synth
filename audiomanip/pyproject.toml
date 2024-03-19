@@ -15,9 +15,14 @@ dependencies = [
 	"numpy",
 	"mido",
 	"scipy",
-	"simpleaudio",
+	"pyaudio",
 	"librosa",
 ]
+
+[project.optional-dependencies]
+types = [
+	"types-pyaudio",
+ ]
 
 [project.urls]
 Homepage = "https://github.com/tnadav/prompt-synth"
@@ -28,7 +33,6 @@ strict = true
 [[tool.mypy.overrides]]
 module = [
     "mido",
-    "simpleaudio",
 ]
 ignore_missing_imports = true
 
