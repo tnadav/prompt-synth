@@ -16,3 +16,15 @@ repos:
     hooks:
       - id: flake8
         args: [--config, audiomanip/setup.cfg]
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.8.4
+    hooks:
+      - id: nbqa-pyupgrade
+        args: [--py39-plus]
+      - id: nbqa-isort
+      - id: nbqa-black
+        args: [--target-version=py39]

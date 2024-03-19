@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import cast
+from typing import Type, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -105,3 +105,15 @@ class SquareOscNoteGenerator(NoteGenerator):
 class TriangleOscNoteGenerator(NoteGenerator):
     def gen_note(self, freq: float, duration: float) -> npt.NDArray[np.float64]:
         return _bl_triangle(freq, duration, self._sample_rate, self._sample_rate // 2)
+
+
+OSCILATORS: dict[str, Type[NoteGenerator]] = {
+    "sine": SineOscNoteGenerator,
+    "sawtooth": SawToothOscNoteGenerator,
+    "square": SquareOscNoteGenerator,
+    "triangle": TriangleOscNoteGenerator,
+}
+
+
+def make_osc(shape: str, sample_rate: int = 44_100) -> NoteGenerator:
+    return OSCILATORS[shape](sample_rate)
