@@ -9,6 +9,7 @@ from .note_gen import (
     make_osc,
 )
 from .nsynth_dataset import NSynthData, NSynthDataset
+from .sampler import SampleNoteGenerator
 
 __all__ = [
     "midi2audio",
@@ -21,4 +22,5 @@ __all__ = [
     "TriangleOscNoteGenerator",
     "NSynthDataset",
     "NSynthData",
+    "SampleNoteGenerator",
 ]
