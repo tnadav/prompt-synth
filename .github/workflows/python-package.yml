@@ -23,10 +23,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        sudo apt-get install -y libasound2-dev
+        sudo apt-get install -y libasound2-dev portaudio19-dev
         python -m pip install --upgrade pip
         python -m pip install pre-commit pytest mypy
-        python -m pip install audiomanip/
+        python -m pip install audiomanip/[types]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run pre-commit checks
       run: |

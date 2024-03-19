@@ -1,9 +1,11 @@
 import argparse
+import io
+from contextlib import closing
 from typing import Type
 
 import numpy as np
 import numpy.typing as npt
-import simpleaudio as sa
+import pyaudio
 
 from audiomanip import (
     NoteGenerator,
@@ -20,13 +22,22 @@ _OSCILATORS: dict[str, Type[NoteGenerator]] = {
     "square": SquareOscNoteGenerator,
     "triangle": TriangleOscNoteGenerator,
 }
+_CHUNK_SIZE = 1024
 
 
 def play_audio(buffer: npt.NDArray[np.float64], sample_rate: int) -> None:
-    buffer *= 32767 / np.max(np.abs(buffer))
-    audio = buffer.astype(np.int16)
-    play_obj = sa.play_buffer(audio, 1, 2, sample_rate)
-    play_obj.wait_done()
+    audio = buffer.astype(np.float32)
+
+    p = pyaudio.PyAudio()
+    try:
+        buf = io.BytesIO(audio.tobytes())
+        with closing(
+            p.open(format=pyaudio.paFloat32, channels=1, rate=sample_rate, output=True)
+        ) as stream:
+            while len(data := buf.read(_CHUNK_SIZE)):
+                stream.write(data)
+    finally:
+        p.terminate()
 
 
 def main() -> None:
