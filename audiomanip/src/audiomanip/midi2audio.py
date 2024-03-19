@@ -1,6 +1,7 @@
 import math
 from typing import IO, Any, Iterable, NamedTuple, cast
 
+import librosa
 import mido
 import numpy as np
 import numpy.typing as npt
@@ -66,10 +67,7 @@ def midi2audio(
     )
 
     for msg in midi_to_note_events(midi):
-        # Calculate the frequency of the note
-        freq = 440.0 * (2.0 ** ((msg.note - 69) / 12.0))
-
-        # Generate the audio for the note
+        freq = float(librosa.midi_to_hz(msg.note))
         note = note_gen.gen_note(freq, msg.duration)
         env = np.concatenate(
             (
