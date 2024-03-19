@@ -30,6 +30,7 @@ def sample_score(sample: NSynthData) -> float:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Make dataset for audiocraft training")
     parser.add_argument("nsynth_path", type=str, help="NSynth wav/json dataset path")
+    parser.add_argument("name", type=str, help="Output dataset name")
     parser.add_argument(
         "output_path", type=str, help="Audiocraft data set output directory"
     )
@@ -47,7 +48,7 @@ def main() -> None:
     for sample in samples.values():
         sample.sort(key=sample_score)
 
-    os.makedirs(os.path.join(args.output_path, "audio"), exist_ok=True)
+    os.makedirs(os.path.join(args.output_path, args.name), exist_ok=True)
 
     with open(os.path.join(args.output_path, "data.jsonl"), "w") as manifest:
         for name, candidates in samples.items():
@@ -66,16 +67,28 @@ def main() -> None:
 
             wav_name = f"{cur_sample.note}.wav"
             sf.write(
-                os.path.join(args.output_path, "audio", wav_name), audio, sample_rate
+                os.path.join(args.output_path, args.name, wav_name), audio, sample_rate
             )
-            sound_info = dict(description=cur_sample.name)
+            music_info = dict(
+                title=None,
+                artist=None,
+                key=None,
+                bpm=None,
+                genre=None,
+                moods=None,
+                keywords=cur_sample.qualities,
+                description=cur_sample.name,
+                name=None,
+                instrument=None,
+            )
             with open(
-                os.path.join(args.output_path, "audio", f"{cur_sample.note}.json"), "w"
+                os.path.join(args.output_path, args.name, f"{cur_sample.note}.json"),
+                "w",
             ) as info:
-                json.dump(sound_info, info)
+                json.dump(music_info, info)
 
             meta = dict(
-                path=os.path.join("audio", wav_name),
+                path=f"dataset/{args.name}/{wav_name}",
                 duration=librosa.get_duration(y=audio, sr=sample_rate),
                 sample_rate=sample_rate,
                 amplitude=None,
