@@ -1,27 +1,13 @@
 import argparse
 import io
 from contextlib import closing
-from typing import Type
 
 import numpy as np
 import numpy.typing as npt
 import pyaudio
 
-from audiomanip import (
-    NoteGenerator,
-    SawToothOscNoteGenerator,
-    SineOscNoteGenerator,
-    SquareOscNoteGenerator,
-    TriangleOscNoteGenerator,
-    midi2audio,
-)
+from audiomanip import OSCILATORS, make_osc, midi2audio
 
-_OSCILATORS: dict[str, Type[NoteGenerator]] = {
-    "sine": SineOscNoteGenerator,
-    "sawtooth": SawToothOscNoteGenerator,
-    "square": SquareOscNoteGenerator,
-    "triangle": TriangleOscNoteGenerator,
-}
 _CHUNK_SIZE = 1024
 
 
@@ -45,7 +31,7 @@ def main() -> None:
     parser.add_argument("midi_file", type=str, help="The MIDI file to play.")
     parser.add_argument(
         "--osc",
-        choices=_OSCILATORS.keys(),
+        choices=OSCILATORS.keys(),
         default="sine",
         help="The MIDI file to play.",
     )
@@ -54,7 +40,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    note_gen = _OSCILATORS[args.osc](args.sample_rate)
+    note_gen = make_osc(args.osc, args.sample_rate)
     with open(args.midi_file, "rb") as f:
         audio = midi2audio(f, note_gen)
 
