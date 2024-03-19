@@ -9,11 +9,13 @@ from .note_gen import (
     make_osc,
 )
 from .nsynth_dataset import NSynthData, NSynthDataset
+from .pitch_shift import pitch_shift_midi_note
 from .sampler import SampleNoteGenerator
 
 __all__ = [
     "midi2audio",
     "make_osc",
+    "pitch_shift_midi_note",
     "OSCILATORS",
     "NoteGenerator",
     "SineOscNoteGenerator",
