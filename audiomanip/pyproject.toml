@@ -19,6 +19,7 @@ dependencies = [
 	"librosa",
 	"librosa",
 	"soundfile",
+	"audiocraft",
 ]
 
 [project.optional-dependencies]
@@ -36,6 +37,10 @@ strict = true
 module = [
     "mido",
     "soundfile",
+	"scipy",
+	"scipy.signal",
+	"audiocraft",
+	"audiocraft.models",
 ]
 ignore_missing_imports = true
 
