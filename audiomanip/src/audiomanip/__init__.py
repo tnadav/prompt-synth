@@ -1,3 +1,4 @@
+from .audiocraft_note_gen import ModelType, make_audiocraft_note_generator
 from .midi2audio import midi2audio
 from .note_gen import (
     OSCILATORS,
@@ -16,7 +17,9 @@ __all__ = [
     "midi2audio",
     "make_osc",
     "pitch_shift_midi_note",
+    "make_audiocraft_note_generator",
     "OSCILATORS",
+    "ModelType",
     "NoteGenerator",
     "SineOscNoteGenerator",
     "SawToothOscNoteGenerator",
