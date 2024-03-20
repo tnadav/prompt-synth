@@ -11,6 +11,7 @@ class NSynthData(NamedTuple):
     velocity: int
     sample_rate: int
     qualities: list[str]
+    instrument_id: int
     instrument_source: str
     instrument_family: str
     note: str
@@ -54,6 +55,7 @@ class NSynthDataset:
                 example["velocity"],
                 example["sample_rate"],
                 example["qualities_str"],
+                example["instrument"],
                 example["instrument_source_str"],
                 example["instrument_family_str"],
                 example["note_str"],

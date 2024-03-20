@@ -38,12 +38,12 @@ def main() -> None:
     args = parser.parse_args()
     dataset = NSynthDataset(args.nsynth_path)
 
-    samples: dict[str, list[NSynthData]] = defaultdict(list)
+    samples: dict[int, list[NSynthData]] = defaultdict(list)
     for example in dataset:
         if "percussive" in example.qualities:
             continue
 
-        samples[example.name].append(example)
+        samples[example.instrument_id].append(example)
 
     for sample in samples.values():
         sample.sort(key=sample_score)
